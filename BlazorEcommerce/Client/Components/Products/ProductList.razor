@@ -1,25 +1,31 @@
-﻿<RadzenDataGrid Data="@Products" TItem="Product" ColumnWidth="150px" >
-    <Columns>
-        <RadzenDataGridColumn TItem="Product" Property="Id" Title="ID" Width="50px" TextAlign="TextAlign.Center" />
-        <RadzenDataGridColumn TItem="Product" Title="Photo" Sortable="false" Width="250px">
-            <Template Context="product">
-                <RadzenImage  class="rz-border-radius-6" Path="@product.ImageUrl" />
-            </Template>
-        </RadzenDataGridColumn>
-        <RadzenDataGridColumn TItem="Product" Title="Title" >
-            <Template Context="product">
-                <p class="rz-text-wrap">@product.Title</p>
-            </Template>
-        </RadzenDataGridColumn>
-        <RadzenDataGridColumn TItem="Product" Title="Description" Width="300">
-            <Template Context="product">
-                <p class="rz-text-wrap">@product.Description</p>
-            </Template>
-        </RadzenDataGridColumn>
-        <RadzenDataGridColumn TItem="Product" Property="Price" Title="Price" >
-            <Template Context="product"> 
-                $<span>@product.Price</span>
-            </Template>
-        </RadzenDataGridColumn>
-    </Columns>
-</RadzenDataGrid>
+﻿@if (ProductService.Products.Length == 0)
+{
+    <span>Products are loading ...</span>
+}
+else
+{
+    <MudDataGrid Items="@ProductService.Products" Filterable="false" SortMode="@SortMode.None" Groupable="false">
+        <Columns>
+            <HierarchyColumn T="Product" ButtonDisabledFunc="@(product => false)" />
+            <TemplateColumn CellClass=" d-flex justify-end">
+                <CellTemplate>
+                    <MudImage Src="@context.Item.ImageUrl" Alt="@context.Item.Title" Elevation="25" Class="rounded-lg" />
+                </CellTemplate>
+            </TemplateColumn>
+            <PropertyColumn Property="x => x.Title" Title="Title" />
+            <PropertyColumn Property="x => x.Price" Format="C" Title="Price" />
+        </Columns>
+        <ChildRowContent>
+            <MudCard>
+                <MudCardHeader>
+                    <CardHeaderContent>
+                        <MudText Typo="Typo.h6">@context.Item.Title</MudText>
+                    </CardHeaderContent>
+                </MudCardHeader>
+                <MudCardContent>
+                    <MudText>This element is number @context.Item.Description</MudText>
+                </MudCardContent>
+            </MudCard>
+        </ChildRowContent>
+    </MudDataGrid>
+}
