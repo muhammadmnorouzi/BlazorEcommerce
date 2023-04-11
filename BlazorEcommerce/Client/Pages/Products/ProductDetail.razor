@@ -1,0 +1,10 @@
+@page "/products/{id:int}"
+
+@if (Product == null)
+{
+    <span>@Message</span>
+}
+else
+{
+    <ProductItem Product="@Product" />
+}
