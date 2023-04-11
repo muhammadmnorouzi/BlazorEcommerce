@@ -1,0 +1,4 @@
+dotnet ef migrations add <Name> -p .\BlazorEcommerce\Server\BlazorEcommerce.Server.csproj -o Data/Migrations
+dotnet ef database update --project .\BlazorEcommerce\Server\BlazorEcommerce.Server.csproj
+
+
