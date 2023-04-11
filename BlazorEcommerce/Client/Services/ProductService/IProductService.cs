@@ -2,7 +2,7 @@ namespace Client.Services.ProductService;
 
 public interface IProductService
 {
-    public Product[] Products { get; protected set; }
+    Product[] Products { get; set; }
     Task GetProducts();
     Task<ServiceResponse<Product>> GetProduct(int id);
 }
