@@ -29,4 +29,18 @@ public class ProductService : IProductService
 
         return new ServiceResponse<IEnumerable<Product>>(products);
     }
+
+    public async Task<ServiceResponse<IEnumerable<Product>>> GetProductsByCategory(string categoryUrl)
+    {
+        var products = await _context
+            .Products
+            .Where(
+                p => p.Category!
+                    .Url
+                    .ToLower()
+                    .Equals(categoryUrl.ToLower()))
+            .ToArrayAsync();
+
+        return new ServiceResponse<IEnumerable<Product>>(data: products);
+    }
 }
