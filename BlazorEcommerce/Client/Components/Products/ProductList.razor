@@ -9,20 +9,7 @@ else
         {
             <MudItem xs="6" sm="4">
                 <MudPaper Class="d-flex align-center justify-center mud-width-full py-8">
-                    <MudCard>
-                        <a href="/products/@item.Id">
-                            <MudCardMedia Image="@item.ImageUrl" Height="400" />
-                        </a>
-                        <MudCardContent>
-                            <a href="/products/@item.Id">
-                                <MudText Typo="Typo.h5">@item.Title</MudText>
-                            </a>
-                            <MudText Typo="Typo.body2">@item.Description</MudText>
-                            <MudText Typo="Typo.body2" Color="Color.Success">
-                                @string.Format("{0:C}" , item.Price)
-                            </MudText>
-                        </MudCardContent>
-                    </MudCard>
+                    <ProductItem Product="@item" />
                 </MudPaper>
             </MudItem>
         }

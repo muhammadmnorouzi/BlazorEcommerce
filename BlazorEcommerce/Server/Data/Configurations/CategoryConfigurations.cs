@@ -24,12 +24,6 @@ public class CategoryConfigurations : IEntityTypeConfiguration<Category>
                 Id = 3,
                 Name = "Video Games",
                 Url = "video-games"
-            },
-            new Category
-            {
-                Id = 4,
-                Name = "Musics",
-                Url = "musics"
             }
       );
     }

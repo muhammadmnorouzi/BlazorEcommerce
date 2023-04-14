@@ -1,8 +1,28 @@
 ﻿<MudCard>
-    <MudCardMedia Image="@Product.ImageUrl" Height="400" />
+    @if (ShowLinks)
+    {
+        <a href="/products/@Product.Id">
+            <MudCardMedia Image="@Product.ImageUrl" Height="400" />
+        </a>
+    }
+    else
+    {
+        <MudCardMedia Image="@Product.ImageUrl" Height="400" />
+    }
     <MudCardContent>
-        <MudText Typo="Typo.h5">@Product.Title</MudText>
+        @if (ShowLinks)
+        {
+            <a href="/products/@Product.Id">
+                <MudText Typo="Typo.h5">@Product.Title</MudText>
+            </a>
+        }
+        else
+        {
+            <MudText Typo="Typo.h5">@Product.Title</MudText>
+        }
         <MudText Typo="Typo.body2">@Product.Description</MudText>
-        <MudText Typo="Typo.body2" Color="Color.Success">@string.Format("{0:C}" , Product.Price)</MudText>
+        @* <MudText Typo="Typo.body2" Color="Color.Success">
+        @string.Format("{0:C}" , item.Price)
+        </MudText> *@
     </MudCardContent>
 </MudCard>
