@@ -15,6 +15,8 @@ public class ProductService : IProductService
     {
         var product = await _context
             .Products
+            .Include(p => p.Variants)
+            .ThenInclude(pv => pv.ProductType)
             .SingleOrDefaultAsync(p => p.Id == id);
 
         bool success = product != null;
@@ -25,7 +27,10 @@ public class ProductService : IProductService
 
     public async Task<ServiceResponse<IEnumerable<Product>>> GetProducts()
     {
-        var products = await _context.Products.ToArrayAsync();
+        var products = await _context
+            .Products
+            .Include(p => p.Variants)
+            .ToArrayAsync();
 
         return new ServiceResponse<IEnumerable<Product>>(products);
     }
@@ -39,6 +44,7 @@ public class ProductService : IProductService
                     .Url
                     .ToLower()
                     .Equals(categoryUrl.ToLower()))
+            .Include(p => p.Variants)
             .ToArrayAsync();
 
         return new ServiceResponse<IEnumerable<Product>>(data: products);

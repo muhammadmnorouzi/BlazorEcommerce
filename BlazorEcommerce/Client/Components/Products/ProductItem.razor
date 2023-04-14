@@ -21,8 +21,8 @@
             <MudText Typo="Typo.h5">@Product.Title</MudText>
         }
         <MudText Typo="Typo.body2">@Product.Description</MudText>
-        @* <MudText Typo="Typo.body2" Color="Color.Success">
-        @string.Format("{0:C}" , item.Price)
-        </MudText> *@
+        <MudText Typo="Typo.body2" Color="Color.Success">
+            @GetPriceText(Product)
+        </MudText>
     </MudCardContent>
 </MudCard>

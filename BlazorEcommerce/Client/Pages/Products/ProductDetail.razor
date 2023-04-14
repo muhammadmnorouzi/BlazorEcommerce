@@ -6,5 +6,23 @@
 }
 else
 {
-    <ProductItem Product="@Product" ShowLinks="false" />
+    <MudCard>
+        <MudCardMedia Image="@Product.ImageUrl" Height="200" />
+        <MudCardContent>
+            <MudText Typo="Typo.h5">@Product.Title</MudText>
+            <MudText Typo="Typo.body2">@Product.Description</MudText>
+            @if (GetSelectedVariant() != null)
+            {
+                @if (GetSelectedVariant()?.OriginalPrice > GetSelectedVariant()?.Price)
+                {
+                    <MudText Typo="Typo.body2" Color="Color.Error" Style="text-decoration: line-through;">
+                        @GetSelectedVariant()?.OriginalPrice
+                    </MudText>
+                }
+                <MudText Typo="Typo.body2" Color="Color.Success">
+                    @GetSelectedVariant()?.Price
+                </MudText>
+            }
+        </MudCardContent>
+    </MudCard>
 }
