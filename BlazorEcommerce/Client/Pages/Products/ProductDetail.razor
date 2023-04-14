@@ -11,6 +11,15 @@ else
         <MudCardContent>
             <MudText Typo="Typo.h5">@Product.Title</MudText>
             <MudText Typo="Typo.body2">@Product.Description</MudText>
+            @if (Product.Variants != null && Product.Variants.Count > 1)
+            {
+                <MudSelect Dense="false" T="int" Label="Variants" Variant="Variant.Text" @bind-Value="@currentTypeId">
+                    @foreach (var variant in Product.Variants)
+                    {
+                        <MudSelectItem Value="variant.ProductTypeId">@variant.ProductType.Name</MudSelectItem>
+                    }
+                </MudSelect>
+            }
             @if (GetSelectedVariant() != null)
             {
                 @if (GetSelectedVariant()?.OriginalPrice > GetSelectedVariant()?.Price)
