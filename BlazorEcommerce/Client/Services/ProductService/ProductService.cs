@@ -15,6 +15,8 @@ public class ProductService : IProductService
 
     public Product[] Products { get; set; }
 
+    public event Action ProductsChanged = new Action(() => { });
+
     public async Task<ServiceResponse<Product>> GetProduct(int id)
     {
         var result = await _client
@@ -23,14 +25,19 @@ public class ProductService : IProductService
         result ??= new ServiceResponse<Product>(null, false, "Api call failed ...");
 
         return result;
+
+
     }
 
-    public async Task GetProducts()
+    public async Task GetProducts(string? categoryUrl = null)
     {
-        var result = await _client
-            .GetFromJsonAsync<ServiceResponse<Product[]>>("api/products");
+        var result = categoryUrl == null
+        ? await _client.GetFromJsonAsync<ServiceResponse<Product[]>>("api/products")
+        : await _client.GetFromJsonAsync<ServiceResponse<Product[]>>($"api/products/category/{categoryUrl}");
 
         if (result != null && result.Data != null)
             Products = result.Data;
+
+        ProductsChanged?.Invoke();
     }
 }
