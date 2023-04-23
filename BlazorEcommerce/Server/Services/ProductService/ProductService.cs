@@ -51,16 +51,59 @@ public class ProductService : IProductService
         return new ServiceResponse<IEnumerable<Product>>(data: products);
     }
 
+    public async Task<ServiceResponse<IEnumerable<string>>> GetProductsSearchSuggestions(string searchText)
+    {
+        var products = await FindProductsBySearchText(searchText);
+
+        List<string> result = new List<string>();
+
+        foreach (var product in products)
+        {
+            if (product.Title.Contains(searchText, StringComparison.OrdinalIgnoreCase))
+            {
+                result.Add(product.Title);
+            }
+
+            if (product.Description != null)
+            {
+                var punctuations = product.Description
+                    .Where(char.IsPunctuation)
+                    .Distinct()
+                    .ToArray();
+
+                var words = product.Description
+                    .Split()
+                    .Select(w => w.Trim(punctuations));
+
+                foreach (string word in words)
+                {
+                    if (word.Contains(searchText, StringComparison.OrdinalIgnoreCase) &&
+                        !result.Contains(word))
+                    {
+                        result.Add(word);
+                    }
+                }
+            }
+        }
+
+        return new ServiceResponse<IEnumerable<string>>(result);
+    }
+
     public async Task<ServiceResponse<IEnumerable<Product>>> SearchProducts(string searchText)
     {
-        var result = await _context
-            .Products
-            .Where(
-                p => p.Title.ToLower().Contains(searchText.ToLower()) ||
-                p.Description.ToLower().Contains(searchText.ToLower()))
-            .Include(p => p.Variants)
-            .ToArrayAsync();
+        var result = await FindProductsBySearchText(searchText);
 
         return new ServiceResponse<IEnumerable<Product>>(result);
+    }
+
+    private async Task<IEnumerable<Product>> FindProductsBySearchText(string searchText)
+    {
+        return await _context
+             .Products
+             .Where(
+                 p => p.Title.ToLower().Contains(searchText.ToLower()) ||
+                 p.Description.ToLower().Contains(searchText.ToLower()))
+             .Include(p => p.Variants)
+             .ToArrayAsync();
     }
 }
