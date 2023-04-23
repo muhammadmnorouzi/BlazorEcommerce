@@ -1,1 +1,1 @@
-dotnet watch run --project .\BlazorEcommerce\Server\BlazorEcommerce.Server.csproj
+dotnet run --project .\BlazorEcommerce\Server\BlazorEcommerce.Server.csproj
