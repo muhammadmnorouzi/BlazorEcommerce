@@ -14,6 +14,7 @@ public class ProductService : IProductService
     }
 
     public Product[] Products { get; set; }
+    public string Message { get; set; } = "Products are loading ...";
 
     public event Action ProductsChanged = new Action(() => { });
 
@@ -25,8 +26,6 @@ public class ProductService : IProductService
         result ??= new ServiceResponse<Product>(null, false, "Api call failed ...");
 
         return result;
-
-
     }
 
     public async Task GetProducts(string? categoryUrl = null)
@@ -37,6 +36,30 @@ public class ProductService : IProductService
 
         if (result != null && result.Data != null)
             Products = result.Data;
+
+        ProductsChanged?.Invoke();
+    }
+
+    public async Task<string[]> GetProductSearchSuggestions(string searchText)
+    {
+        var result = await _client.GetFromJsonAsync<ServiceResponse<string[]>>($"api/products/searchsuggestions/{searchText}");
+
+        return result!.Data!;
+    }
+
+    public async Task SearchProducts(string searchText)
+    {
+        var result = await _client.GetFromJsonAsync<ServiceResponse<Product[]>>($"api/products/search/{searchText}");
+
+        if (result != null && result.Data != null)
+        {
+            Products = result.Data;
+
+            if (Products.Length == 0)
+            {
+                Message = "No Products Found!";
+            }
+        }
 
         ProductsChanged?.Invoke();
     }

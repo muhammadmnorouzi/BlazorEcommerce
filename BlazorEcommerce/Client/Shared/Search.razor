@@ -1,0 +1,11 @@
+<MudGrid>
+    <MudItem xs="8" sm="8" md="8">
+        <MudAutocomplete T="string" Label="Products" @bind-Value="searchText" SearchFunc="@SearchSuggestions"
+            ResetValueOnEmptyText="true" CoerceText="false" @ref="searchInput" />
+    </MudItem>
+    <MudItem xs="3" sm="3" md="3">
+        <MudButton Variant="Variant.Filled" IconColor="Color.Secondary" StartIcon="@Icons.Material.Filled.Search"
+            Size="Size.Large" @onclick="SearchProducts">
+            Search</MudButton>
+    </MudItem>
+</MudGrid>
