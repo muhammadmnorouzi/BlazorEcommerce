@@ -46,9 +46,10 @@ public class ProductsController : ControllerBase
     }
 
     [HttpGet("search/{searchText}")]
-    public async Task<ActionResult<ServiceResponse<IEnumerable<Product>>>> SearchProducts(string searchText)
+    public async Task<ActionResult<ServiceResponse<PaginationResult<Product>>>> SearchProducts(
+        [FromQuery] ProductPaginationParams paginationParams)
     {
-        var response = await _productService.SearchProducts(searchText);
+        var response = await _productService.SearchProducts(paginationParams);
 
         return Ok(response);
     }

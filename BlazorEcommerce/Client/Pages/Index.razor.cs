@@ -23,7 +23,12 @@ public partial class Index
         }
         else
         {
-            await ProductService.SearchProducts(SearchText);
+            await ProductService.SearchProducts(new ProductPaginationParams
+            {
+                PageNumber = ProductService.SearchPaginationHeader?.CurrentPage ?? 1,
+                PageSize = ProductService.SearchPaginationHeader?.ItemsPerPage ?? 30,
+                SearchText = SearchText,
+            });
         }
     }
 }

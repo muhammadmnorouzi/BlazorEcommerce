@@ -1,5 +1,5 @@
-using System.Reflection.Metadata.Ecma335;
 using BlazorEcommerce.Server.Data;
+using BlazorEcommerce.Server.Helpers.Pagination;
 
 namespace Server.Services.ProductService;
 
@@ -100,11 +100,20 @@ public class ProductService : IProductService
         return new ServiceResponse<IEnumerable<string>>(result);
     }
 
-    public async Task<ServiceResponse<IEnumerable<Product>>> SearchProducts(string searchText)
+    public async Task<ServiceResponse<PaginationResult<Product>>> SearchProducts(
+        ProductPaginationParams paginationParams)
     {
-        var result = await FindProductsBySearchText(searchText);
+        var query = _context
+            .Products
+            .Where(
+                p => p.Title.ToLower().Contains(paginationParams.SearchText.ToLower()) ||
+                p.Description.ToLower().Contains(paginationParams.SearchText.ToLower()))
+            .Include(p => p.Variants);
 
-        return new ServiceResponse<IEnumerable<Product>>(result);
+        var result = await PagedList<Product>
+            .CreateAsync(query, paginationParams.PageNumber, paginationParams.PageSize);
+
+        return new ServiceResponse<PaginationResult<Product>>(result);
     }
 
     private async Task<IEnumerable<Product>> FindProductsBySearchText(string searchText)
