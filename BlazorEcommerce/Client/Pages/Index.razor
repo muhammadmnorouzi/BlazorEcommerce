@@ -1,7 +1,15 @@
 ﻿@page "/"
 @page "/search/{searchText}"
 @page "/{categoryUrl}"
+@using BlazorEcommerce.Client.Pages.Products
 
 <PageTitle>Shop Name</PageTitle>
 
-<ProductList />
+@if (SearchText == null && CategoryUrl == null)
+{
+    <FeaturedProducts />
+}
+else
+{
+    <ProductList />
+}

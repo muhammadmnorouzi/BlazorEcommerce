@@ -1,0 +1,17 @@
+@if (ProductService.Products.Length == 0)
+{
+    <span>@ProductService.Message</span>
+}
+else
+{
+    <MudGrid>
+        @foreach (Product item in @ProductService.Products.Where(p => p.Featured))
+        {
+            <MudItem xs="6" sm="4">
+                <MudPaper Class="d-flex align-center justify-center mud-width-full py-8">
+                    <ProductItem Product="@item" />
+                </MudPaper>
+            </MudItem>
+        }
+    </MudGrid>
+}

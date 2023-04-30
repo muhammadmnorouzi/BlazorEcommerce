@@ -12,6 +12,17 @@ public class ProductService : IProductService
         this._context = context;
     }
 
+    public async Task<ServiceResponse<IEnumerable<Product>>> GetFeaturedProducts()
+    {
+        var products = await _context
+            .Products
+            .Where(p => p.Featured)
+            .Include(p => p.Variants)
+            .ToArrayAsync();
+
+        return new ServiceResponse<IEnumerable<Product>>(products);
+    }
+
     public async Task<ServiceResponse<Product>> GetProduct(int id)
     {
         var product = await _context

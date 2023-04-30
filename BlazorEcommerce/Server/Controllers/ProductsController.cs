@@ -29,6 +29,14 @@ public class ProductsController : ControllerBase
         return Ok(response);
     }
 
+    [HttpGet("featured")]
+    public async Task<ActionResult<ServiceResponse<IEnumerable<Product>>>> GetFeaturedProducts()
+    {
+        var response = await _productService.GetFeaturedProducts();
+
+        return Ok(response);
+    }
+
     [HttpGet("category/{categoryUrl}")]
     public async Task<ActionResult<ServiceResponse<IEnumerable<Product>>>> GetProductsByCategory(string categoryUrl)
     {
