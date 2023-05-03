@@ -1,5 +1,5 @@
 using System.Net.Http.Json;
-using BlazorEcommerce.Shared.Extensions;
+using System.Text.Json;
 using Microsoft.AspNetCore.Components;
 
 namespace Client.Services.ProductService;
@@ -8,10 +8,15 @@ public class ProductService : IProductService
 {
     private readonly HttpClient _client;
     private readonly NavigationManager _navigationManager;
+    private readonly ILogger<ProductService> _logger;
 
-    public ProductService(HttpClient client, NavigationManager navigationManager)
+    public ProductService(
+        HttpClient client,
+        NavigationManager navigationManager,
+        ILogger<ProductService> logger)
     {
         this._navigationManager = navigationManager;
+        _logger = logger;
         this._client = client;
         Products = Array.Empty<Product>();
     }
@@ -35,8 +40,8 @@ public class ProductService : IProductService
     public async Task GetProducts(string? categoryUrl = null)
     {
         var result = categoryUrl == null
-        ? await _client.GetFromJsonAsync<ServiceResponse<Product[]>>("api/products")
-        : await _client.GetFromJsonAsync<ServiceResponse<Product[]>>($"api/products/category/{categoryUrl}");
+            ? await _client.GetFromJsonAsync<ServiceResponse<Product[]>>("api/products")
+            : await _client.GetFromJsonAsync<ServiceResponse<Product[]>>($"api/products/category/{categoryUrl}");
 
         if (result != null && result.Data != null)
         {
@@ -48,35 +53,41 @@ public class ProductService : IProductService
 
     public async Task<string[]> GetProductSearchSuggestions(string searchText)
     {
-        var result = await _client.GetFromJsonAsync<ServiceResponse<string[]>>($"api/products/searchsuggestions/{searchText}");
+        var result = await _client.GetFromJsonAsync<ServiceResponse<string[]>>(
+            $"api/products/searchsuggestions/{searchText}");
 
         return result!.Data!;
     }
 
     public async Task SearchProducts(ProductPaginationParams paginationParams)
     {
-        var url = new Uri(_navigationManager.Uri).Host + "/api/products/search/";
-        var builder = new UriBuilder(url);
+        var httpResponse = await _client.PostAsJsonAsync("api/products/search/", paginationParams);
 
-        builder.AddQuery(name: nameof(paginationParams.PageNumber), paginationParams.PageNumber.ToString());
-        builder.AddQuery(name: nameof(paginationParams.PageSize), paginationParams.PageSize.ToString());
-        builder.AddQuery(name: nameof(paginationParams.SearchText), paginationParams.SearchText);
-
-        var result = await _client.GetFromJsonAsync<ServiceResponse<PaginationResult<Product>>>(builder.Uri);
-
-        if (result != null && result.Data != null)
+        if (httpResponse.IsSuccessStatusCode == false)
         {
-            Products = result.Data.Items.ToArray();
+            Message = await httpResponse.Content.ReadAsStringAsync() ?? "Error in api call for search !!!";
+            Products = Array.Empty<Product>();
+        }
+        else
+        {
+            var result = await httpResponse.Content.ReadFromJsonAsync<ServiceResponse<PaginationResult<Product>>>();
 
-            SearchPaginationHeader = new PaginationHeader(
-                result.Data.CurrentPage,
-                result.Data.ItemsPerPage,
-                result.Data.TotalItems,
-                result.Data.TotalPages);
-
-            if (Products.Length == 0)
+            if (result != null && result.Data != null)
             {
-                Message = "No Products Found!";
+                Products = result.Data.Items;
+
+                _logger.LogInformation($"{Products.Length} items found with this searchText");
+
+                SearchPaginationHeader = new PaginationHeader(
+                    result.Data.CurrentPage,
+                    result.Data.ItemsPerPage,
+                    result.Data.TotalItems,
+                    result.Data.TotalPages);
+
+                if (Products.Length == 0)
+                {
+                    Message = "No Products Found!";
+                }
             }
         }
 

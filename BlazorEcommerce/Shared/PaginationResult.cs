@@ -2,7 +2,11 @@ namespace BlazorEcommerce.Shared;
 
 public class PaginationResult<T>
 {
-    public PaginationResult(IEnumerable<T> items, int count, int pageNumber, int pageSize, int totalPages)
+    public PaginationResult()
+    {
+    }
+
+    public PaginationResult(T[] items, int count, int pageNumber, int pageSize, int totalPages)
     {
         Items = items;
         TotalItems = count;
@@ -11,7 +15,7 @@ public class PaginationResult<T>
         TotalPages = totalPages;
     }
 
-    public IEnumerable<T> Items { get; }
+    public T[] Items { get; set; } = Array.Empty<T>();
 
     public int CurrentPage { get; set; }
     public int ItemsPerPage { get; set; }

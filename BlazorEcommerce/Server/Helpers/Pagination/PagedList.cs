@@ -8,7 +8,7 @@ public static class PagedList<T>
         int pageSize)
     {
         var count = await source.CountAsync();
-        var items = await source.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+        var items = await source.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToArrayAsync();
 
         return new PaginationResult<T>(items, count, pageNumber, pageSize, (int)count / pageSize);
     }

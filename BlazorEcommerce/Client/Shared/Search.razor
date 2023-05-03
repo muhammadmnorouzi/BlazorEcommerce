@@ -3,7 +3,7 @@
         <MudAutocomplete T="string" Label="Products" @bind-Value="searchText" SearchFunc="@SearchSuggestions"
             ResetValueOnEmptyText="true" CoerceText="false" @ref="searchInput" />
     </MudItem>
-    <MudItem xs="3" sm="3" md="3">
+    <MudItem xs="4" sm="4" md="4">
         <MudButton Variant="Variant.Filled" IconColor="Color.Secondary" StartIcon="@Icons.Material.Filled.Search"
             Size="Size.Large" @onclick="SearchProducts" class="mx-0">
             Search</MudButton>

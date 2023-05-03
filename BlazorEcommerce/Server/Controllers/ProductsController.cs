@@ -45,9 +45,9 @@ public class ProductsController : ControllerBase
         return Ok(response);
     }
 
-    [HttpGet("search/{searchText}")]
+    [HttpPost("search/")]
     public async Task<ActionResult<ServiceResponse<PaginationResult<Product>>>> SearchProducts(
-        [FromQuery] ProductPaginationParams paginationParams)
+        [FromBody] ProductPaginationParams paginationParams)
     {
         var response = await _productService.SearchProducts(paginationParams);
 

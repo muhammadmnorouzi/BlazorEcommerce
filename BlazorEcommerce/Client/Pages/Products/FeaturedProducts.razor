@@ -5,13 +5,16 @@
 else
 {
     <MudGrid>
-        @foreach (Product item in @ProductService.Products.Where(p => p.Featured))
+        @if (@ProductService.Products.Any())
         {
-            <MudItem xs="6" sm="4" class="d-flex flex-row">
-                <MudPaper Class="d-flex align-center justify-center mud-width-full py-8">
-                    <ProductItem Product="@item" />
-                </MudPaper>
-            </MudItem>
+            @foreach (Product item in @ProductService.Products.Where(p => p.Featured))
+            {
+                <MudItem xs="6" sm="4">
+                    <MudPaper Class="d-flex align-center justify-center mud-width-full py-8">
+                        <ProductItem Product="@item" />
+                    </MudPaper>
+                </MudItem>
+            }
         }
     </MudGrid>
 }
