@@ -1,3 +1,4 @@
+using BlazorEcommerce.Client.Shared;
 using Microsoft.AspNetCore.Components;
 
 namespace BlazorEcommerce.Client.Pages;
@@ -10,8 +11,14 @@ public partial class Index
     [Parameter]
     public string? SearchText { get; set; }
 
+    [Parameter]
+    public int Page { get; set; } = 1;
+
     [Inject]
-    public IProductService ProductService { get; set; } = null!;
+    public IProductService ProductService { get; set; } = default!;
+
+    [Inject]
+    public NavigationManager NavigationManager { get; set; } = default!;
 
     protected async override Task OnParametersSetAsync()
     {
@@ -25,10 +32,15 @@ public partial class Index
         {
             await ProductService.SearchProducts(new ProductPaginationParams
             {
-                PageNumber = ProductService.SearchPaginationHeader?.CurrentPage ?? 1,
-                PageSize = ProductService.SearchPaginationHeader?.ItemsPerPage ?? 30,
+                PageNumber = Page,
+                PageSize = ProductService.SearchPaginationHeader?.ItemsPerPage ?? 2,
                 SearchText = SearchText,
             });
         }
+    }
+
+    private void PageChanged(int page)
+    {
+        NavigationManager.NavigateTo($"/search/{SearchText}/{page}");
     }
 }

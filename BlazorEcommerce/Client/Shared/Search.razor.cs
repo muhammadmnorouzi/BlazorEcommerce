@@ -33,8 +33,7 @@ public partial class Search
 
     public void SearchProducts()
     {
-
-        NavigationManager.NavigateTo($"search/{searchInput!.Text}");
+        NavigationManager.NavigateTo($"search/{searchInput!.Text}/1");
     }
 
     public async Task HandleSearch(KeyboardEventArgs args)

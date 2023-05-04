@@ -10,6 +10,8 @@ public class ProductService : IProductService
     private readonly NavigationManager _navigationManager;
     private readonly ILogger<ProductService> _logger;
 
+    private string _lastSearchText = string.Empty;
+
     public ProductService(
         HttpClient client,
         NavigationManager navigationManager,
@@ -61,6 +63,17 @@ public class ProductService : IProductService
 
     public async Task SearchProducts(ProductPaginationParams paginationParams)
     {
+        if (_lastSearchText == paginationParams.SearchText)
+        {
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(paginationParams.SearchText))
+        {
+            _navigationManager.NavigateTo("/");
+            return;
+        }
+
         var httpResponse = await _client.PostAsJsonAsync("api/products/search/", paginationParams);
 
         if (httpResponse.IsSuccessStatusCode == false)

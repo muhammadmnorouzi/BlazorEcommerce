@@ -1,5 +1,5 @@
 ﻿@page "/"
-@page "/search/{searchText}"
+@page "/search/{searchText}/{page:int}"
 @page "/{categoryUrl}"
 @using BlazorEcommerce.Client.Pages.Products
 
@@ -12,4 +12,12 @@
 else
 {
     <ProductList />
+
+    @if (@ProductService.SearchPaginationHeader != null)
+    {
+        <MudPagination Rectangular="true" Variant="Variant.Outlined" Color="Color.Primary"
+    Count="@ProductService.SearchPaginationHeader.TotalPages" SelectedChanged="PageChanged" />
+
+        <MudText Align="Align.Center">Page: @Page</MudText>
+    }
 }

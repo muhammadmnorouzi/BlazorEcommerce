@@ -20,7 +20,16 @@
         {
             <MudText Typo="Typo.h5">@Product.Title</MudText>
         }
-        <MudText Typo="Typo.body2">@Product.Description</MudText>
+
+        @if (@Product.Description.Length > 250)
+        {
+            <MudText Typo="Typo.body2">@Product.Description.Substring(0 , 200) .....</MudText>
+        }
+        else
+        {
+            <MudText Typo="Typo.body2">@Product.Description</MudText>
+        }
+
         <MudText Typo="Typo.body2" Color="Color.Success">
             @GetPriceText(Product)
         </MudText>
